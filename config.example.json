@@ -1,0 +1,8 @@
+{
+  "discord_bot_token": "VOTRE_TOKEN_DISCORD_ICI",
+  "default_user_id": "",
+  "watch_url": "https://in.njuko.com/marathondelille2026",
+  "check_interval_minutes": 10,
+  "last_hash_file": "last_hash.txt",
+  "subscribers_file": "subscribers.json"
+}

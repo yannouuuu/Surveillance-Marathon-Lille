@@ -1,0 +1,7 @@
+.gocache/
+.gomodcache/
+config.json
+last_hash.txt
+subscribers.json
+*.tmp
+surveillance-marathon-lille
