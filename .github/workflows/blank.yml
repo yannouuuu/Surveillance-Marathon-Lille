@@ -1,0 +1,40 @@
+name: Surveillance Semi-Marathon Lille 2026
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Vérifier la page inscriptions
+        id: check
+        run: |
+          curl -s -L -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" https://in.njuko.com/marathondelille2026 -o current.html
+          
+          # Détection si c'est encore fermé
+          if grep -qiE "prochainement|bientôt|ouvriront|ouverture prochain" current.html; then
+            echo "status=closed" >> $GITHUB_OUTPUT
+            echo "✅ Toujours fermé"
+          else
+            echo "status=opened" >> $GITHUB_OUTPUT
+            echo "🔥 OUVERT !"
+          fi
+
+      - name: Envoyer alerte Discord
+        if: steps.check.outputs.status == 'opened'
+        uses: D3r3k23/discord-webhook-action@v1
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: >
+            🔥 **LES INSCRIPTIONS AU SEMI-MARATHON DE LILLE 2026 SONT OUVERTES !**
+
+            Va vite t'inscrire ici → https://in.njuko.com/marathondelille2026
+
+            (Détecté automatiquement par GitHub)
+          embed_title: "Semi Lille 2026 - Inscriptions Ouvertes"
+          embed_color: "3066993" 
+          embed_description: "Ne traîne pas, les dossards partent vite !"
